@@ -1,0 +1,36 @@
+package q63554;
+
+import java.util.Scanner;
+class TreeNode {
+    int val;
+    TreeNode left, right;
+    TreeNode(int val) {
+        this.val = val;
+        this.left = this.right = null;
+    }
+}
+
+public class CTJ63554 {
+    static Scanner sc = new Scanner(System.in);
+    
+    public static TreeNode buildTree() {
+        int val = sc.nextInt();
+        if (val == -1) return null;
+        TreeNode node = new TreeNode(val);
+        node.left = buildTree(); 
+        node.right = buildTree(); 
+        return node;
+    }
+
+    public static void preorderTraversal(TreeNode root) {
+        if (root == null) return;
+        System.out.print(root.val + " ");
+        preorderTraversal(root.left);
+        preorderTraversal(root.right);
+    }
+    
+    public static void main(String[] args) {
+        TreeNode root = buildTree();
+        inorderTraversal(root);
+    }
+}
