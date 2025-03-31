@@ -1,0 +1,61 @@
+package q64026;
+import java.util.*;
+
+class TreeNode {
+    int data;
+    TreeNode left, right;
+    
+    TreeNode(int data) {
+        this.data = data;
+        this.left = this.right = null;
+    }
+}
+
+public class CTJ64026 {
+    public static int findHeight(TreeNode root) {
+        if (root == null) return 0;
+        return 1 + Math.max(findHeight(root.left), findHeight(root.right));
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+
+        if (n == 0) {
+            System.out.println("Invalid number of nodes");
+            return;
+        }
+
+        // Read root node
+        int rootValue = sc.nextInt();
+        TreeNode root = new TreeNode(rootValue);
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+
+        for (int i = 1; i < n; i++) {
+            int value = sc.nextInt();
+            char direction = sc.next().charAt(0);
+            TreeNode newNode = new TreeNode(value);
+            
+            // Find the first available parent in level order
+            while (!queue.isEmpty()) {
+                TreeNode parent = queue.peek();
+                
+                if (direction == 'L' && parent.left == null) {
+                    parent.left = newNode;
+                    break;
+                } else if (direction == 'R' && parent.right == null) {
+                    parent.right = newNode;
+                    queue.poll(); // Move to next parent
+                    break;
+                } else {
+                    queue.poll(); // Move to next parent
+                }
+            }
+            queue.add(newNode);
+        }
+
+        // Compute and print height
+        System.out.println(findHeight(root));
+    }
+}
