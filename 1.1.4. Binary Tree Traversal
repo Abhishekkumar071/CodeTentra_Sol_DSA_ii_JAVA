@@ -1,0 +1,127 @@
+package q63998;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+class Node {
+    int data;
+    Node left, right;
+
+    public Node(int item) {
+        data = item;
+        left = right = null;
+    }
+}
+
+public class CTJ63998{
+    Node root;
+
+    // Method to insert a new node in level order
+    public Node insert(Node root, int data) {
+        if (data == -1) {
+            return root;
+        }
+        Node newNode = new Node(data);
+        if (root == null) {
+            return newNode; 
+        }
+
+        // Use a queue to perform level order insertion
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            Node temp = queue.poll();
+
+            // Insert in the left child if available
+            if (temp.left == null) {
+                temp.left = newNode;
+                return root;
+            } else {
+                queue.add(temp.left);
+            }
+
+            // Insert in the right child if available
+            if (temp.right == null) {
+                temp.right = newNode;
+                return root;
+            } else {
+                queue.add(temp.right);
+            }
+        }
+        return root;
+    }
+    public String inorder(Node root) {
+        if (root == null) {
+            return "";
+        }
+        return inorder(root.left) + root.data + " " + inorder(root.right);
+    }
+    public String preorder(Node root) {
+        if (root == null) {
+            return "";
+        }
+        return root.data + " " + preorder(root.left) + preorder(root.right);
+    }
+    public String postorder(Node root) {
+        if (root == null) {
+            return "";
+        }
+        return postorder(root.left) + postorder(root.right) + root.data + " ";
+    }
+
+    // Search for a specific value in the binary tree
+    public String search(Node root, int key) {
+        if (root == null) {
+            return "not found";
+        }
+        if (root.data == key || search(root.left, key).equals("found") || search(root.right, key).equals("found")) {
+            return "found";
+        }
+        return "not found";
+    }
+
+    public static void main(String[] args) {
+        CTJ63998 tree = new CTJ63998();
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder results = new StringBuilder();
+
+        while (true) {
+            String input = scanner.nextLine();
+            if (input.isEmpty()) {
+                continue; // Skip empty lines
+            }
+            String[] command = input.split(" ");
+            int cmd = Integer.parseInt(command[0]);
+            Integer value = command.length > 1 ? Integer.parseInt(command[1]) : null;
+
+            switch (cmd) {
+                case 1: // Insert
+                    tree.root = tree.insert(tree.root, value);
+                    break;
+                case 2: // In-order Traversal
+                    String inOrderResult = tree.inorder(tree.root).trim();
+                    results.append(inOrderResult.isEmpty() ? "-1" : inOrderResult +" ").append("\n");
+                    break;
+                case 3: // Pre-order Traversal
+                    String preOrderResult = tree.preorder(tree.root).trim();
+                    results.append(preOrderResult.isEmpty() ? "-1" : preOrderResult +" ").append("\n");
+                    break;
+                case 4: // Post-order Traversal
+                    String postOrderResult = tree.postorder(tree.root).trim();
+                    results.append(postOrderResult.isEmpty() ? "-1" : postOrderResult +" ").append("\n");
+                    break;
+                case 5: // Search
+                    results.append(tree.search(tree.root, value)).append("\n");
+                    break;
+                case 6: // Exit
+                    System.out.print(results.toString());
+                    scanner.close();
+                    return; // Exit the program
+                default:
+                    System.out.println("Invalid command");
+            }
+        }
+    }
+}
